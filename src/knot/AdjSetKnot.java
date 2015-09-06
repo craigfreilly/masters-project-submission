@@ -3,21 +3,45 @@ package knot;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+
+    /* This knot is represented as follows.  
+        -   firstCrossing is a link to the first crossing in the knot (which can be chosen arbitarily for all 
+            knots) which points to the first node of a DLL of AdjSetKnot.Crossing objects.
+        -   each AdjSetKnot.Crossing is linked to an array of outgoing AdjSetKnot.Arc objects.  The outgoing over
+            crossing is placed in index 0 of the array and the outgoing under crossing index 1.
+        -   each AdjSetKnot.Arc object contains a link to the arc's source and target crossings, and attributes
+            determining the nature of the arc (over/under) at source and target
+    */
+
+
+    /**
+    * <h1>An implementation of the Knot interface using Adjacency Sets</h1>
+    *
+    * This knot is represented as follows.  
+    * <ul>
+    *    <li> firstCrossing is a link to the first crossing in the knot (which can be chosen arbitarily for all 
+    *       knots) which points to the first node of a DLL of AdjSetKnot.Crossing objects.
+    *    <li>   each AdjSetKnot.Crossing is linked to an array of outgoing AdjSetKnot.Arc objects.  The outgoing over
+    *        crossing is placed in index 0 of the array and the outgoing under crossing index 1.
+    *    <li>  each AdjSetKnot.Arc object contains a link to the arc's source and target crossings, and attributes
+    *       determining the nature of the arc (over/under) at source and target
+    * </ul>
+    *
+    * @author  Craig Reilly
+    * @version 0.1
+    * @since   2015-09-07
+    */
+
 public class AdjSetKnot implements Knot
 {
-	/* This knot is represented as follows.  
-		-	firstCrossing is a link to the first crossing in the knot (which can be chosen arbitarily for all 
-			knots) which points to the first node of a DLL of AdjSetKnot.Crossing objects.
-		-	each AdjSetKnot.Crossing is linked to an array of outgoing AdjSetKnot.Arc objects.  The outgoing over
-			crossing is placed in index 0 of the array and the outgoing under crossing index 1.
-		- 	each AdjSetKnot.Arc object contains a link to the arc's source and target crossings, and attributes
-			determining the nature of the arc (over/under) at source and target
-	*/
 
 	private AdjSetKnot.Crossing firstCrossing;
 
 	private int size;
 
+    /**
+    * The constructor for AdjSetKnot objects.  Sets the first crossing = null, and zeros the size.
+    */
 	public AdjSetKnot()
 	{
 		//construct a Knot, initially empty
@@ -28,13 +52,13 @@ public class AdjSetKnot implements Knot
 		size = 0;
 	}
 
-    // public AdjSetKnot(int[] gaussCode)
-    // {
-        
-    // }
 
     ///////////////////////// Accessors /////////////////////////
-
+    
+    /**
+    * Getter method for the size of the knot (the number of crossings)
+    * @return the number of crossings in the knot
+    */
     public int size() 
     {
     	// Return the number of crossings in this knot
@@ -43,14 +67,19 @@ public class AdjSetKnot implements Knot
 
     ///////////////////////// Transformers /////////////////////////
 
+    /**
+    * Resets the knot object to its state after the constuctor is called
+    */
     public void clear()
     {
     	firstCrossing = null;
     	size = 0;
     }
 
-    // public void clone()
-
+    /**
+    * Adds crossings to the knot.
+    * @return the crossing just added to the knot
+    */
     public Knot.Crossing addCrossing()
     {
     	//add to this knot a new crossing
@@ -73,6 +102,11 @@ public class AdjSetKnot implements Knot
         return crossing;
     }
 
+    /**
+    * Adds crossings to the knot, together with a string which is the name given to the crossing
+    * @param n the name to be given to the crossing
+    * @return the crossing just added to the knot
+    */
     public Knot.Crossing addCrossing(String n)
     {
         //add to this knot a new crossing
@@ -96,6 +130,14 @@ public class AdjSetKnot implements Knot
         return crossing;
     }
 
+    /**
+    * Adds arcs to the knot, between crossings source and target, and sets their orientations
+    * @param source the source crossing for the arc
+    * @param target the target crossing for the arc
+    * @param sourceOrient the orientation of the arc at the source crossing
+    * @param targetOrient the orientation of the arc at the target crossing
+    * @return the crossing just added to the knot
+    */
     public Knot.Arc addArc(Knot.Crossing source, Knot.Crossing target, int sourceOrient, int targetOrient)
     {
     	//add outgoing arc to the array label on source
@@ -107,32 +149,50 @@ public class AdjSetKnot implements Knot
     	return null;
     }
 
+    /**
+    * Removes a crossing from the knot - NOT CURRENTLY IMPLEMENTED
+    * @param cross the crossing to be removed
+    */
     public void removeCrossing(Knot.Crossing cross)
     {
-        for (AdjSetKnot.Crossing c = firstCrossing; c!=null; c = c.nextCrossing)
-        {
-            for (int i = 0 ; i < 2 ; i++)
-            {
-
-            }
-        }
+        // not implemented
     }
 
+    /**
+    * Removes an arc from the knot - NOT CURRENTLY IMPLEMENTED
+    * @param arc the arc to be removed
+    */
+    public void removeArc(Knot.Crossing arc)
+    {
+        // not implemented
+    }
+    /**
+    * Reverses the orientation of each arc in the knot - NOT CURRENTLY IMPLEMENTED
+    */
     public void reverse()
     {
-
+        // not implemented
     }
 
     public void checkValid()
     {
-
+        // not implemented
     }
 
+    /**
+    * Getter method for firstCrossing
+    * @return firstCrossing
+    */
     public Knot.Crossing getFirstCrossing()
     {
         return firstCrossing;
     }
 
+    /**
+    * Getter method for the crossings, found by the order in which they were added to the knot
+    * @param i 1 if gettng 1st added, 2 if getting 2nd added, and so on
+    * @return ith crossing added 
+    */
     public Knot.Crossing getByOrderAdded(int i)
     {
         Iterator it = this.iterator();
@@ -154,12 +214,20 @@ public class AdjSetKnot implements Knot
     }
 
     ///////////////////////// Iterators /////////////////////////
-
+    
+    /**
+    * Iterator to traverse the knot in the order of a walk around it
+    * @return AdjSetKnot.WalkIterator 
+    */
     public Knot.WalkIterator walk()
     {
     	return new AdjSetKnot.WalkIterator();
     }
 
+    /**
+    * Iterator to traverse the knot in the order the crossings were added to the knot
+    * @return AdjSetKnot.WalkIterator 
+    */
     public Iterator iterator()
     {
         return new AdjSetKnot.OrderAddedIterator();
@@ -330,23 +398,19 @@ public class AdjSetKnot implements Knot
             //if we've not left yet then return true
     		if (leftOnTheWalk == false)
     		{
-                // System.out.println("just left");
     			return true;
     		}
     		else if (currentCrossing == firstCrossing && halfway == false)
     		{   //if we have gone halfway though
                 halfway = true;
-                // System.out.println("halfway");
     			return true;
     		}
             else if (currentCrossing != firstCrossing && halfway == true)
             {   // if we've gone over half way though
-                // System.out.println("past halfway");
                 return true;
             }
             else
             {
-                // System.out.println("else");
                 return (currentCrossing != firstCrossing);
             }
     	}

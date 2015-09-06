@@ -4,36 +4,46 @@ import java.util.*;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+    /**
+    * <h1>An implementation of the ColouringList abstract data type using an array</h1>
+    *
+    *
+    * @author  Craig Reilly
+    * @version 0.1
+    * @since   2015-09-07
+    */
+
 public class ColouringList
 {
 	private ColouringList.Node[] list;
 	private Knot knot;
 	private int size;
 
+    /**
+    * The constructor for ColouringList objects. The constructor takes the knot and describes it as a ColouringList
+    * @param k the knot which is to be represented by the ColouringList object
+    */
 	public ColouringList(Knot k)
 	{
 		this.knot = k;
 		size = knot.size();
-		// System.out.println("Size of this knot is " + size);
 		this.list = new Node[size];
 
-		for(int i = 0; i < size; i++)
-		{
-			if (list[i] == null)
-			{
-				// System.out.println("The " + i + " in this list is null");
-			}
-		}
+		// for(int i = 0; i < size; i++)
+		// {
+		// 	if (list[i] == null)
+		// 	{
+		// 		// System.out.println("The " + i + " in this list is null");
+		// 	}
+		// }
 
-		// System.out.println(" *** ColouringList constructor.");
 		//add all the crossings from the knot to the list
 		addCrossings();
-		// System.out.println("Finished adding crossings");
-
-		// System.out.println("Size of the list is " + list.length);
 	}
 
-	//adds all crossings from the knot into the list, does more work than it should TODOd
+	/**
+    * Adds all crossings from the knot into the list
+    */
 	public void addCrossings()
 	{
 		Knot.WalkIterator walk = knot.walk();
@@ -42,37 +52,23 @@ public class ColouringList
 		{
 			Knot.Crossing crossing = (Knot.Crossing) walk.next();
 
-
 			addCrossing(crossing.getOrderAdded());
 		}
-
-		// System.out.println("These crossings are added to the ColouringList: ");
-
-		// System.out.println("Size in addCrossings() " + size);
-		for(int i = 0; i < size; i++)
-		{
-			// System.out.println("this crossing has been added to each... " + list[i].getCrossing() + "");
-		}
-
-
 	}
 
+	/**
+    * Add crossing from the knot into the list, called by addCrossings()
+    * @param cross the int which corresponds to the order by which the crossing was added to the knot
+    */
 	public void addCrossing(int cross)
 	{
-		// System.out.println("Cross " + cross);
 		boolean alreadyInList = false;
 		boolean success = false;
 
-		// Knot.Crossing crossing;
 		int crossing;
-
-		// System.out.println("Size in addcrossing() " + size);
-
 
 		for(int i = 0; i < size; i++) 
 		{
-			// System.out.println("i " + i);
-
 			if (list[i] == null)
 			{
 					list[i] = new Node();
@@ -87,34 +83,28 @@ public class ColouringList
 			}
 		}
 
-		// System.out.println("Cross again " + cross);
-
 		int c = cross;
-
-		// System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>.. c is " + c);
 
 		if (!alreadyInList)
 		{
-			// System.out.println("!alreadyInList");
 			for (int i = 0; i < size; i++)
 			{
-				// System.out.println("Got in the for loop");
 				crossing = list[i].getCrossing();
-
-				// System.out.println("Crossing here was " + crossing);
 
 				if (crossing == -1 && !success)
 				{
-					// System.out.println("Got in the inner if ");
 					list[i].setCrossing(c);
-
 					success = true;
 				}
 			}
 		}
 	}
 
-	// where walkPos is the position of the arc in the walk
+	/**
+    * Adds under arcs to the ColouringList
+    * @param cross the int which corresponds to the order by which the crossing was added to the knot
+    * @param walkPos  the position of the arc in the walk
+    */
 	public void pushUnder(int cross, int walkPos)
 	{
 		int crossingFromList;
@@ -125,15 +115,18 @@ public class ColouringList
 
 			if (cross == crossingFromList)
 			{
-				// System.out.println("Actually added something");
 				list[i].addUnder(walkPos);
 				i = size;
 			}
 		}
 	}
 
-	// where walkPos is the position of the arc in the walk
-	public void pushOver(int cross, int walkPos)
+	/**
+    * Over under arcs to the ColouringList
+    * @param cross the int which corresponds to the order by which the crossing was added to the knot
+    * @param walkPos  the position of the arc in the walk
+    */	
+    public void pushOver(int cross, int walkPos)
 	{
 		int crossingFromList;
 
@@ -143,31 +136,17 @@ public class ColouringList
 
 			if (cross == crossingFromList)
 			{
-				// System.out.println("Actually added something");
 				list[i].addOver(walkPos);
 				i = size;
 			}
 		}
 	}
 
-	// public int popUnder(int cross)
-	// {
-	// 	int crossingFromList;
-	// 	int walkPos = -1; //set this to a value that doesn't correspond to a crossing orientation
-
-	// 	for (int i = 0; i < size; i++)
-	// 	{
-	// 		crossingFromList = list[i].getCrossing();
-	// 		if (cross == crossingFromList)
-	// 		{
-	// 			walkPos = list[i].popUnder();
-	// 			i = size;
-	// 		}
-	// 	}
-
-	// 	return walkPos;
-	// }
-
+	/**
+    * Removes under arcs from the list
+    * @param i the int which corresponds to the order by which the crossing was added to the knot
+    * @return the position in a walk around the knot which the arc was found 
+    */
 	public int popUnder(int i)
 	{
 		if ((i < 0) || i > size)
@@ -178,24 +157,11 @@ public class ColouringList
 		return list[i].popUnder();
 	}
 
-	// public int popOver(Knot.Crossing cross)
-	// {
-	// 	Knot.Crossing crossingFromList;
-	// 	int walkPos = -1; //set this to a value that doesn't correspond to a crossing orientation
-
-	// 	for (int i = 0; i < size; i++)
-	// 	{
-	// 		crossingFromList = list[i].getCrossing();
-	// 		if (cross == crossingFromList)
-	// 		{
-	// 			walkPos = list[i].popOver();
-	// 			i = size;
-	// 		}
-	// 	}
-
-	// 	return walkPos;
-	// }
-
+	/**
+    * Removes over arcs from the list
+    * @param i the int which corresponds to the order by which the crossing was added to the knot
+    * @return the position in a walk around the knot which the arc was found 
+    */
 	public int popOver(int i)
 	{
 		if ((i < 0) || i > size)
@@ -206,15 +172,14 @@ public class ColouringList
 		return list[i].popOver();
 	}
 
+	/**
+    * Getter method for the sice of the ColouringList
+    * @return the size of the ColouringList 
+    */
 	public int size()
 	{
 		return size;
 	}
-
-	public Iterator iterator()
-    {
-    	return new LRIterator();
-    }
 
 	private class Node
 	{
@@ -231,20 +196,17 @@ public class ColouringList
 
 		public void setCrossing(int cross)
 		{
-			// System.out.println("Cross in node " + cross);
 			this.crossing = cross;
 		}
 
 		public void addUnder(int walkPos)
 		{
 			unders.push(walkPos);
-			// System.out.println(unders.peek() + " ... peeking");
 		}
 
 		public void addOver(int walkPos)
 		{
 			overs.push(walkPos);
-			// System.out.println(overs.peek() + " ... peeking");
 		}
 
 		public int popUnder()
@@ -260,36 +222,6 @@ public class ColouringList
 		public int getCrossing()
 		{
 			return this.crossing;
-		}
-	}
-
-	private class LRIterator implements Iterator
-	{
-		private int position = 0;
-
-		public LRIterator()
-		{
-			position = 0;
-		}
-
-		public boolean hasNext()
-		{
-			return (position < size);
-		}
-
-		public Node next()
-		{
-			if (position >= size)
-			{
-				throw new NoSuchElementException();
-			}
-
-			return list[position++];
-		}
-
-		public void remove()
-		{
-			// not implemented 
 		}
 	}
 }

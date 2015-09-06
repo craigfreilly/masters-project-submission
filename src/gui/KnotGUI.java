@@ -10,9 +10,10 @@ import javax.swing.JLabel;
 import java.awt.GridBagLayout;
 import java.util.*;
 import java.io.*;
+import javax.swing.JFileChooser;
+
 
 import javax.imageio.ImageIO;
-// import java.awt.Graphics;
 import javax.swing.ImageIcon;
 import java.awt.image.BufferedImage;
 
@@ -60,6 +61,13 @@ public class KnotGUI extends JFrame implements ActionListener {
 
 	private String gaussCode = "";
 
+	private File outputFile;
+	private Boolean updateGUI = false;
+
+	//Create a file chooser
+	private final JFileChooser fc = new JFileChooser();
+
+
 	/**
     * The constructor for KnotGUI objects.  Creates and lays out the GUI
     */
@@ -97,12 +105,43 @@ public class KnotGUI extends JFrame implements ActionListener {
         JMenuItem exit = new JMenuItem("Exit");
 
         openGC.addActionListener(new ActionListener()
-       	{
-            @Override
-            public void actionPerformed(ActionEvent event) {
-            	System.out.println("openGC pressed");
-            }
-       	});
+        {
+            public void actionPerformed(ActionEvent event) 
+           	{
+
+	        	JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showOpenDialog(KnotGUI.this);
+				Scanner sc = null;
+				
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+
+					System.out.println("Selected file: " + file.getAbsolutePath());
+
+					try
+					{
+						sc = new Scanner(file);
+
+						String gc = sc.nextLine();
+
+						gaussInputField.setText(gc);
+					}
+					catch(IOException e)
+					{
+						JOptionPane.showMessageDialog(KnotGUI.this,
+    						"There was an error when opening the file.",
+    						"File Error",
+    						JOptionPane.WARNING_MESSAGE);
+
+					}
+					finally
+					{
+						sc.close();
+					}
+				}
+			}
+        });
 
         exit.addActionListener(new ActionListener() 
         {
@@ -119,12 +158,15 @@ public class KnotGUI extends JFrame implements ActionListener {
         JMenuItem generateRandomGC = new JMenuItem("Generate random GC");
         JMenuItem genearteRandomPrimeGC = new JMenuItem("Generate random prime GC");
         JMenuItem generateAllGC = new JMenuItem("Generate all Gauss codes of size n");
+        JMenuItem generateAllPrimeGC = new JMenuItem("Generate all prime Gauss codes of size n");
+
 
         generateRandomGC.addActionListener(new ActionListener()
        	{
             @Override
             public void actionPerformed(ActionEvent event) {
             	System.out.println("generateRandomGC pressed");
+            	updateGUI = true;
             	generationOptions = 0;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
             	(gen = new GaussCodeGenTask()).execute();
@@ -137,6 +179,7 @@ public class KnotGUI extends JFrame implements ActionListener {
             @Override
             public void actionPerformed(ActionEvent event) {
             	System.out.println("generateRandomPrimeGC pressed");
+            	updateGUI = true;
             	generationOptions = 2;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
             	(gen = new GaussCodeGenTask()).execute();
@@ -147,36 +190,82 @@ public class KnotGUI extends JFrame implements ActionListener {
        	{
             @Override
             public void actionPerformed(ActionEvent event) {
-            	System.out.println("generateAllGC pressed");
+            	JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showSaveDialog(KnotGUI.this);
+				
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					outputFile = fc.getSelectedFile();
+				}
+            	generationOptions = 1;
+            	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
+            	(gen = new GaussCodeGenTask()).execute();
+            }
+        });
+
+       	generateAllPrimeGC.addActionListener(new ActionListener()
+       	{
+            @Override
+            public void actionPerformed(ActionEvent event) {
+            	JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showSaveDialog(KnotGUI.this);
+				
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					outputFile = fc.getSelectedFile();
+				}
+            	generationOptions = 3;
+            	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
+            	(gen = new GaussCodeGenTask()).execute();
             }
         });
 
        	generate.add(generateRandomGC);
        	generate.add(genearteRandomPrimeGC);
        	generate.add(generateAllGC);
+       	generate.add(generateAllPrimeGC);
 
        	// create the save menu optiongs
        	JMenuItem saveGC = new JMenuItem("Save Gauss code");
-       	JMenuItem savePic = new JMenuItem("Save knot picture");
 
        	saveGC.addActionListener(new ActionListener()
-       	{
-            @Override
-            public void actionPerformed(ActionEvent event) {
-            	System.out.println("saveGC pressed");
-            }
-        });
+        {
+            public void actionPerformed(ActionEvent event) 
+           	{
 
-       	savePic.addActionListener(new ActionListener()
-       	{
-            @Override
-            public void actionPerformed(ActionEvent event) {
-            	System.out.println("savePic pressed");
-            }
+	        	JFileChooser fc = new JFileChooser();
+				int returnVal = fc.showSaveDialog(KnotGUI.this);
+
+				PrintWriter writer = null;
+				
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+				{
+					File file = fc.getSelectedFile();
+
+					System.out.println("Selected file: " + file.getAbsolutePath());
+
+					try
+					{
+						writer = new PrintWriter(file);
+
+						writer.print(gaussInputField.getText());
+					}
+					catch(IOException e)
+					{
+						JOptionPane.showMessageDialog(KnotGUI.this,
+    						"There was an error when writing the file.",
+    						"File Error",
+    						JOptionPane.WARNING_MESSAGE);
+					}
+					finally
+					{
+						writer.close();
+					}
+				}
+			}
         });
 
        	save.add(saveGC);
-       	save.add(savePic);
 
        	menuBar.add(file);
        	menuBar.add(generate);
@@ -330,15 +419,11 @@ public class KnotGUI extends JFrame implements ActionListener {
 			}
 			catch(Exception e)
 			{
-				System.out.println("That took too long");
 				// imposing a timeout on picDraw doesn't impose a timeout on the athematica script that it calls
 				// here we kill the WolframKernel to stop the Mathematica script
 				try 
 				{
-					System.out.println("In the try");
-					Runtime runtime = Runtime.getRuntime();
-					Process process = runtime.exec("pkill -9 WolframKernel");
-					System.out.println("Killed the WolframKernel");
+					killWolfRamKernel();
 				}
 				catch(Exception ex)
 				{
@@ -357,24 +442,23 @@ public class KnotGUI extends JFrame implements ActionListener {
 			(picDraw = new PictureDraw()).execute();
 			try
 			{
-				picDraw.get(60, TimeUnit.SECONDS); 
+				picDraw.get(15, TimeUnit.SECONDS); 
 			}
 			catch(Exception e)
 			{
-				System.out.println("That took too long");
+				// imposing a timeout on picDraw doesn't impose a timeout on the athematica script that it calls
+				// here we kill the WolframKernel to stop the Mathematica script
 				try 
 				{
-					System.out.println("In the try");
-					Runtime runtime = Runtime.getRuntime();
-					Process process = runtime.exec("pkill -9 WolframKernel");
-					System.out.println("Killed the WolframKernel");
+					killWolfRamKernel();
 				}
 				catch(Exception ex)
 				{
 					System.out.println("There was an error in killing WolframKernel");
 				}
+					
 				JOptionPane.showMessageDialog(this,
-    				"The Mathematica script used to draw knot\ndiagrams often finds nonprime knots difficult, \nso we've set a 15 second timeout.",
+    				"The Mathematica script used to draw arc\npresentations often finds nonprime knots difficult, \nso we've set a 15 second timeout.",
     				"Drawing Timeout",
     				JOptionPane.WARNING_MESSAGE);
 
@@ -388,6 +472,16 @@ public class KnotGUI extends JFrame implements ActionListener {
 		}
 	}
 	
+	/**
+	* Executes a command to kill all process called WolframKernel
+	* @throws IOException 
+	*/
+	public void killWolfRamKernel() throws IOException
+	{
+		Runtime runtime = Runtime.getRuntime();
+		Process process = runtime.exec("pkill -9 WolframKernel");
+		System.out.println("Killed the WolframKernel");
+	}
 
    	private class PictureDraw extends SwingWorker<Void, Void> {
        	@Override
@@ -421,11 +515,6 @@ public class KnotGUI extends JFrame implements ActionListener {
        	protected void done() {
         		try 
         		{
-	        		System.out.println("Got in the done method");
-	        		// ImageIcon icon = new ImageIcon("/temp/planarPic.jpg");
-	        		// icon.getImage().flush();
-	          //      	picture.setIcon(icon);
-	        		// resetPicture();
 	        		picture.setIcon(null);
 	        		if (picToBeDrawn == KNOT_DIAGRAM)
 	        		{
@@ -450,7 +539,7 @@ public class KnotGUI extends JFrame implements ActionListener {
        	public Void doInBackground() 
        	{
        		// we don't want verbose output --- that's why false
-            NaiveShadowGaussGenerator sGG = new NaiveShadowGaussGenerator(crossings, generationOptions, false);
+            BinaryModelShadowGaussGenerator sGG = new BinaryModelShadowGaussGenerator(crossings, generationOptions, false);
 
             gaussCode = sGG.solutionToString();
 
@@ -460,9 +549,34 @@ public class KnotGUI extends JFrame implements ActionListener {
       	@Override
        	protected void done() 
        	{
-       		gaussInputField.setText(gaussCode);
+       		if (updateGUI)
+       		{
+       			gaussInputField.setText(gaussCode);
+       		}
+       		else
+       		{
+       			PrintWriter writer = null; 
+
+       			try
+       			{
+       				writer = new PrintWriter(outputFile);
+       				writer.print(gaussCode);
+       			}
+       			catch(IOException e)
+       			{
+					JOptionPane.showMessageDialog(KnotGUI.this,
+    						"There was an error when writing the file.",
+    						"File Error",
+    						JOptionPane.WARNING_MESSAGE);
+				}
+				finally
+				{
+					writer.close();
+				}
+       		}
        	}
-   	}
+    }
+   	
 
    	private class ColouringTask extends SwingWorker<Void, Integer> {
 	    @Override
@@ -501,23 +615,6 @@ public class KnotGUI extends JFrame implements ActionListener {
 	   			colouringLabel.setText("This knot isn't colourable mod 3, 5, or 7");
 	   		}
 	   	}
-
-	   // 	public int orient(int n)
-    // 	{
-    // 		int orient;
-
-    // 		if (n < 0)
-    // 		{
-    // 		orient = Knot.UNDER;
-    // 		}
-    // 		else
-    // 	{
-    // 		orient = Knot.OVER;
-    // 	}
-
-    // 	return orient;
-    // }
-
    	}
 
 	/**

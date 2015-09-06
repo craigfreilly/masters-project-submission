@@ -66,7 +66,26 @@ where option1 is given as either:
    2 to generate a random prime codes,
    3 to generate all prime codes.
  
-option2 is given as 'verbose' to include information about the solver, or omitted to leave this information out by defult 
+option2 is given as 'verbose' to include information about the solver, or omitted to leave this information out by default
+
+####An example
+Running
+
+```
+java -cp .:../resources/choco-solver-2.1.5.jar gaussCodeGenerator.BinaryModelShadowGaussGenerator 3 3 verbose 
+```
+
+gives the following output
+
+```
+1, 2, 3, 1, 2, 3, 
+feasible: true
+nbSol: 4
+nodes: 9   cpu: 7
+Solution count: 1
+```
+
+Where the Gauss code is give, the problem is determined to have solutions, the number of solutions before the post search filtering is 4, the number of nodes used by search is 9, the runtime is 7ms and the number of solutions after the post search filtering is 1.
 
 ### Running the colouring command line interface
 

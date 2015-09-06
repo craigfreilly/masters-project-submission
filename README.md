@@ -99,5 +99,27 @@ where file is a file containing one or more Gauss codes, each on its own line (w
 
 where number is the number (which should be prime) by which the knot(s) in the file at to be coloured.
 
+####An example
+
+Running
+
+```
+java -cp .:../resources/choco-solver-2.1.5.jar knot.KnotColouring ../resources/Rolfsen-table/3_1.txt 3 verbose
+```
+
+gives as output 
+
+```
+arc 0 colour 1
+arc 1 colour 1
+arc 2 colour 0
+arc 3 colour 0
+arc 4 colour 2
+arc 5 colour 2
+
+true 3 23
+```
+
+Where arc 0 is the arc which leaves crossing 1 with over orientation.  So in the Gauss code the colouring starts from the positive 1.  True says that the colouring is feasible, 3 denotes that it took 3 nodes during search, and 23 dentores that it took 23ms to complete search.
 
 ### What's included in the resources directory

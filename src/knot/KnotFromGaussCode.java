@@ -14,7 +14,7 @@ public class KnotFromGaussCode
 {
     /**
     * Creates a knot object, from an input Gauss code
-    * @param gaussString a Gauss code
+    * @param guassString a Gauss code
     * @return the Knot represented by the Gauss code
     */
 	public Knot toKnot(String guassString)
@@ -78,7 +78,7 @@ public class KnotFromGaussCode
     /**
     * Returns the orientation of an arc, given a letter from the Gauss code
     * @param n a letter from the Gauss code
-    * @return Knot.Over if n > 0, Knot.Under otherwise
+    * @return Knot.Over if n greater than 0, Knot.Under otherwise
     */
 	public int orient(int n)
     {

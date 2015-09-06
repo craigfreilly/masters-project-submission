@@ -21,7 +21,8 @@ public class KnotColouring
     * The constructor for KnotColouring objects. 
     * @param fname a file name (which should be a text file containing Gauss code(s) 
     * @param modP the number of colours which it is to be coloured by
-    * @param verbose true if full solutions are to be printed, false if just success 
+    * @param verbose true if full solutions are to be printed, false if just success
+    * @throws IOException if the file name isn't found 
     */
 	public KnotColouring(String fname, int modP, boolean verbose) throws IOException 
 	{
@@ -39,11 +40,10 @@ public class KnotColouring
     	}
 	}
 
-	 /**
+	/**
     * The constructor for KnotColouring objects. 
-    * @param fname a file name (which should be a text file containing Gauss code(s) 
-    * @param modP the number of colours which it is to be coloured by
-    * @param verbose true if full solutions are to be printed, false if just success 
+    * @param args command line arguments
+    * @throws IOException is thrown if the file input can't be found or opened
     */
 	public static void main(String[] args) throws IOException
 	{

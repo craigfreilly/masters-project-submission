@@ -58,15 +58,15 @@ or
 java -cp .:../resources/choco-solver-2.1.5.jar gaussCodeGenerator.BinaryModelShadowGaussGenerator <number> <option1> <option2> 
 ```
 
-where <number> is the crossing number for the Gauss code(s)
+where number is the crossing number for the Gauss code(s)
  
-where <option1> is given as either:
+where option1 is given as either:
    0 to generate a random code,
    1 to generate all codes,
    2 to generate a random prime codes,
    3 to generate all prime codes.
  
-<option2> is given as 'verbose' to include information about the solver, or omitted to leave this information out by defult 
+option2 is given as 'verbose' to include information about the solver, or omitted to leave this information out by defult 
 
 ### Running the colouring command line interface
 
@@ -76,9 +76,9 @@ The command line colouring interface is run by typing
 java -cp .:../resources/choco-solver-2.1.5.jar knot.KnotColouring <file> <number>
 ```
 
-where <file> is a file containing one or more Gauss codes, each on its own line (with no trailling empty lines).  Such files can be found in resources/Rolfsen-table/ and resources/R-H-T-table/ 
+where file is a file containing one or more Gauss codes, each on its own line (with no trailling empty lines).  Such files can be found in resources/Rolfsen-table/ and resources/R-H-T-table/ 
 
-where <number> is the number (which should be prime) by which the knot(s) in the file at to be coloured.
+where number is the number (which should be prime) by which the knot(s) in the file at to be coloured.
 
 
 ### What's included in the resources directory

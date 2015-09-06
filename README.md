@@ -1,6 +1,6 @@
 # masters-project-submission
 
-This software was created by Craig Reilly, as part of his third semester project in fulfillment of his Masters in Software Development at the University of Glasgow.  The software makes use of the existing Choco constraint programming toolkit, and the KnotTheory` Mathematica package.  Both are included in this repo for ease of installation.
+This software was created by Craig Reilly, as part of his third semester project in fulfillment of his Masters in Software Development at the University of Glasgow.  The software makes use of the existing Choco constraint programming toolkit, and the KnotTheory` Mathematica package.  Both are included in this repo for ease of installation.  Use of the drawing tools in the require Mathematica to be installed on the user's system.  The software was tested on Ubuntu 12.10 and 14.10 and 15.04, but should run on any UNIX system.  It will not run without modification on Windows.
 
 The purpose of the software was to automatically generate knots.  The approach taken is to generate Gauss codes which represent classical knots (and to only generate one Gauss code per equivalence class of Gauss codes).
 
@@ -43,6 +43,16 @@ The GUI can be run by typing the following command
 java -cp .:../resources/choco-solver-2.1.5.jar gui.KnotGUI 
 ```
 ###Using the GUI
+
+The GUI allows access to much of the functionality of the command line tools (described below).  
+
+The majority of the GUI is split into two panes, one for drawing and the for colouring.  The use of these aspects of the GUI is self evident.
+
+The Generation menu allows access to the generation tool, and clicking on the options in the menu will bring up a dialog box asking how many crossings the Gauss code is to be generated for.  If one code is requested, the generated shadow Gauss code is then loaded into the Gauss code text field.  This code can be given a sign sequence by hand.  If all codes are requested then the output is written to a file.
+
+The File menu allows for a Gauss code included in a file to be loaded into the GUI.
+
+The Save menu allows for the Gauss code in the Gauss code text field to be save, and for the picture displayed by the GUI to be saved.
 
 ### Running and using the generation command line interface
 

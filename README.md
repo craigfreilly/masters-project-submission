@@ -133,3 +133,15 @@ true 3 23
 Where arc 0 is the arc which leaves crossing 1 with over orientation.  So in the Gauss code the colouring starts from the positive 1.  True says that the colouring is feasible, 3 denotes that it took 3 nodes during search, and 23 dentores that it took 23ms to complete search.
 
 ### What's included in the resources directory
+
+The resources directory contains the JAR files needed by the software.  These are 
+
+```
+choco-solver-2.1.5.jar
+hamcrest-core-1.3.jar  
+junit-4.12.jar
+```
+
+The resources directory also contains the Rolfsen and Hoste-Thistlethwaite tables.  Rolfsen-table/ contains txt files for each knot in the table, the contents of which are the knot represented as a Gauss code.  R-H-T-table/ contains similar files, but this time for all knots up to 11 crossings.
+
+Finally, the resources directory contains a directory called temp/ which is used to house temporary resources required by the GUI.

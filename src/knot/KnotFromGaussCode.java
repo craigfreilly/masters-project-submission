@@ -2,8 +2,21 @@ package knot;
 
 import java.util.*;
 
+    /**
+    * <h1>From Gauss codes to Knot objects</h1>
+    *
+    * @author  Craig Reilly
+    * @version 0.1
+    * @since   2015-09-07
+    */
+
 public class KnotFromGaussCode
 {
+    /**
+    * Creates a knot object, from an input Gauss code
+    * @param gaussString a Gauss code
+    * @return the Knot represented by the Gauss code
+    */
 	public Knot toKnot(String guassString)
 	{
 		LinkedList<Integer> gaussList = new LinkedList<Integer>();
@@ -19,17 +32,9 @@ public class KnotFromGaussCode
             }
             catch(NumberFormatException e) 
             {
-                // PrintWriter writer = new PrintWriter(fname, "UTF-8");
-                // writer.print("Problem");
-                // writer.close();
-                // System.exit(0);
             }
 
-			// num = zeroBase(num);
-
 			gaussList.addLast(num);
-
-			// System.out.print("" + num + " ");
  		}
 
  		knot = new AdjSetKnot();
@@ -64,10 +69,17 @@ public class KnotFromGaussCode
  			knot.addArc(source, target, orient(n), orient(m));
  		}
 
+        gaussList.clear();
+
  		return knot;
 
 	}
 
+    /**
+    * Returns the orientation of an arc, given a letter from the Gauss code
+    * @param n a letter from the Gauss code
+    * @return Knot.Over if n > 0, Knot.Under otherwise
+    */
 	public int orient(int n)
     {
     	int orient;

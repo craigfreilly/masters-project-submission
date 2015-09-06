@@ -3,17 +3,6 @@ package knot;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-
-    /* This knot is represented as follows.  
-        -   firstCrossing is a link to the first crossing in the knot (which can be chosen arbitarily for all 
-            knots) which points to the first node of a DLL of AdjSetKnot.Crossing objects.
-        -   each AdjSetKnot.Crossing is linked to an array of outgoing AdjSetKnot.Arc objects.  The outgoing over
-            crossing is placed in index 0 of the array and the outgoing under crossing index 1.
-        -   each AdjSetKnot.Arc object contains a link to the arc's source and target crossings, and attributes
-            determining the nature of the arc (over/under) at source and target
-    */
-
-
     /**
     * <h1>An implementation of the Knot interface using Adjacency Sets</h1>
     *
@@ -162,7 +151,7 @@ public class AdjSetKnot implements Knot
     * Removes an arc from the knot - NOT CURRENTLY IMPLEMENTED
     * @param arc the arc to be removed
     */
-    public void removeArc(Knot.Crossing arc)
+    public void removeArc(Knot.Arc arc)
     {
         // not implemented
     }

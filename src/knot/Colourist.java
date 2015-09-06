@@ -14,36 +14,42 @@ import choco.kernel.solver.variables.integer.IntDomainVar;
 import choco.cp.solver.search.integer.varselector.MinDomain;
 import choco.cp.solver.search.integer.varselector.StaticVarOrder;
 
-
+    /**
+    * <h1>An implementation of the knot colouring mod p using Choco</h1>
+    *
+    * @author  Craig Reilly
+    * @version 0.1
+    * @since   2015-09-07
+    */
 
 public class Colourist
 {
-public static final String ANSI_RESET = "\u001B[0m";
-public static final String ANSI_BLACK = "\u001B[30m";
-public static final String ANSI_RED = "\u001B[31m";
-public static final String ANSI_GREEN = "\u001B[32m";
-public static final String ANSI_YELLOW = "\u001B[33m";
-public static final String ANSI_BLUE = "\u001B[34m";
-public static final String ANSI_PURPLE = "\u001B[35m";
-public static final String ANSI_CYAN = "\u001B[36m";
-public static final String ANSI_WHITE = "\u001B[37m";
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_CYAN = "\u001B[36m";
+    public static final String ANSI_WHITE = "\u001B[37m";
 
 	private Knot knot; 
 	private Model model;  
     private Solver solver;
     private int pColours; //colouring is done mod p
-    private int[] solutions;
     private int numOfArcs;
     private int numOfCrossings;
     private Knot.Arc[] arcAtPosition;
     private ColouringList colouringPositions; 	
-    // an array of deques of integers. the integers are the arc's positions in the walks
-	// and they are added to the array depending on their crossing's orderAdded, and to the
-	// deques with the rule that outgoing crossings are to the front, incoming crossings
-	// to the rear
     private IntegerVariable[] arc; //arc[i] is an integer variable with domain [0, p - 1]
     private IntegerVariable[] notAllSame;
 
+    /**
+    * The constructor for ColouringList objects. The constructor takes the knot and describes it as a ColouringList
+    * @param code the Gauss code of the knot which is to be coloured
+    * @param colours the number of colours which it is to be coloured by
+    */
     public Colourist(String code, int colours)
     {
         KnotFromGaussCode knotToGC = new KnotFromGaussCode();
@@ -72,27 +78,33 @@ public static final String ANSI_WHITE = "\u001B[37m";
     	arc = makeIntVarArray("arc ", numOfArcs, 0, pColours - 1);
     	notAllSame = makeIntVarArray("notAllSame", numOfArcs - 1, 0, 1);
 
-    	// solutions = new int[3];
-    	// solutions[0] = (-1) * pColours;
-    	// solutions[1] = 0;
-    	// solutions[2] = pColours;
-
     	model = new CPModel();
         solver = new CPSolver();
 
     }
 
+    /**
+    * isColourable() is just a proxy for isColourable(false)
+    * @return true if the knot is colourable mod p ,false otherwise
+    */
     public boolean isColourable()
     {
         return isColourable(false);
     }
 
+    /**
+    * isColourable() is just a proxy for isColourable(false)
+    * @param print true if full solution to be reported, false if just success to be reported
+    * @return true if the knot is colourable mod p ,false otherwise
+    */
     public boolean isColourable(boolean print)
     {
         boolean verbose = print;
     	Knot.WalkIterator walk = knot.walk();
+
         //counter for how many arcs we've seen
     	int i = 0; 
+
     	Knot.Crossing crossing;
     	Knot.Crossing target;
     	int crossingNum;
@@ -101,8 +113,6 @@ public static final String ANSI_WHITE = "\u001B[37m";
     	int targetOrient;
     	Knot.Arc[] outArcs = new Knot.Arc[2]; 
     	colouringPositions = new ColouringList(knot);
-
-    	// System.out.println("Trying to colour a knot of size " + numOfCrossings + " with " + numOfArcs + " arcs.");
 
     	// get the positions of the arcs in the walk associated with the crossings and add them to the stacks associated
     	// with the crossings in the colouringPosistions
@@ -113,20 +123,14 @@ public static final String ANSI_WHITE = "\u001B[37m";
     		crossingNum = crossing.getOrderAdded();
     		incomingOrient = walk.getIncomingArcOrient();
 
-    		// System.out.println("Incoming orientation in Colourist: " + incomingOrient);
-
     		//if the incoming orientation of the ith arc is is over then add i to the over stack for this crossing
     		if (incomingOrient == Knot.OVER)
     		{
     			colouringPositions.pushOver(crossingNum, i);
-    			// System.out.println("Colourist pushing over.");
-    			// System.out.println("pushed over " + i + " to crossing " + crossingNum);
-
     		}
     		else // if the incoming orientation is under, then add i to the under stack for this crossing
     		{
     			colouringPositions.pushUnder(crossingNum, i);
-    			// System.out.println("pushed under " + i + " to crossing " + crossingNum);
     		}
 
     		// retrieve the target crossing of this arc, the number associated with the target
@@ -139,12 +143,10 @@ public static final String ANSI_WHITE = "\u001B[37m";
     		if (targetOrient == Knot.OVER) 
     		{
     			colouringPositions.pushOver(targetNum, i);
-    			// System.out.println("pushed over " + i + " to crossing " + targetNum);
     		}
     		else // if the target orientation of the arc is under then add i to the under stack of the target crossing
     		{
     			colouringPositions.pushUnder(targetNum, i);
-    			// System.out.println("pushed under " + i + " to crossing " + targetNum);
     		}
 
     		i++;
@@ -165,20 +167,19 @@ public static final String ANSI_WHITE = "\u001B[37m";
 
      		// overarcs at a crossing must take the same value
      		model.addConstraint(eq(arc[over1], arc[over2]));
-     		// System.out.println(" ** making these equal " + arc[over1] + "  |  " + arc[over2]);
 
      		// labels on arcs have to conform at crossings to the equation
      		//		2x - y - z = 0 mod p
      		//
      		// where x is an over crossing and y and z are the undercrossings
      		// WLOG we can choose either overcrossing
-     		// model.addConstraint(mod(minus(minus(mult(arc[over1], constant(2)), arc[under1]), arc[under2])
-     		//, constant(0), constant(pColours)));
      		Constraint negP = eq(minus(minus(mult(arc[over1], 2), arc[under1]), arc[under2]), ((-1) * pColours));
      		Constraint zero = eq(minus(minus(mult(arc[over1], 2), arc[under1]), arc[under2]), 0);
      		Constraint p = eq(minus(minus(mult(arc[over1], 2), arc[under1]), arc[under2]), pColours);
      		model.addConstraint(or(negP, zero, p));
      	}
+
+        ///////////////////////////////////////////
 
      	// we must also set the constraint that some arc value is not the same as the rest
      	for (int k = 0; k < numOfArcs - 1; k++)
@@ -190,11 +191,13 @@ public static final String ANSI_WHITE = "\u001B[37m";
 
      	solver.read(model);
 
+        // if there is a solution, success = true, false otherwise
     	boolean success = solver.solve();
 
     	int solution = -1;
     	String colour;
 
+        // the colouring only works up to 7 colours, fix this in future
     	if (success && verbose)
     	{
 	    	for (int k = 0; k < numOfArcs; k++)

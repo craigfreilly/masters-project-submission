@@ -64,7 +64,6 @@ public class KnotGUI extends JFrame implements ActionListener {
 	private File outputFile;
 	private Boolean updateGUI = false;
 
-	//Create a file chooser
 	private final JFileChooser fc = new JFileChooser();
 
 
@@ -117,8 +116,6 @@ public class KnotGUI extends JFrame implements ActionListener {
 				{
 					File file = fc.getSelectedFile();
 
-					System.out.println("Selected file: " + file.getAbsolutePath());
-
 					try
 					{
 						sc = new Scanner(file);
@@ -165,7 +162,6 @@ public class KnotGUI extends JFrame implements ActionListener {
        	{
             @Override
             public void actionPerformed(ActionEvent event) {
-            	System.out.println("generateRandomGC pressed");
             	updateGUI = true;
             	generationOptions = 0;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
@@ -178,7 +174,6 @@ public class KnotGUI extends JFrame implements ActionListener {
        	{
             @Override
             public void actionPerformed(ActionEvent event) {
-            	System.out.println("generateRandomPrimeGC pressed");
             	updateGUI = true;
             	generationOptions = 2;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
@@ -192,11 +187,13 @@ public class KnotGUI extends JFrame implements ActionListener {
             public void actionPerformed(ActionEvent event) {
             	JFileChooser fc = new JFileChooser();
 				int returnVal = fc.showSaveDialog(KnotGUI.this);
-				
+
 				if (returnVal == JFileChooser.APPROVE_OPTION)
 				{
 					outputFile = fc.getSelectedFile();
 				}
+
+            	updateGUI = false;
             	generationOptions = 1;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
             	(gen = new GaussCodeGenTask()).execute();
@@ -214,6 +211,8 @@ public class KnotGUI extends JFrame implements ActionListener {
 				{
 					outputFile = fc.getSelectedFile();
 				}
+
+				updateGUI = false;
             	generationOptions = 3;
             	crossings = Integer.parseInt(JOptionPane.showInputDialog("Enter crossing number"));
             	(gen = new GaussCodeGenTask()).execute();
@@ -241,8 +240,6 @@ public class KnotGUI extends JFrame implements ActionListener {
 				if (returnVal == JFileChooser.APPROVE_OPTION)
 				{
 					File file = fc.getSelectedFile();
-
-					System.out.println("Selected file: " + file.getAbsolutePath());
 
 					try
 					{
@@ -281,9 +278,6 @@ public class KnotGUI extends JFrame implements ActionListener {
     */
 	public JLabel makePic() throws IOException
 	{
-		// JLabel picLabel = new JLabel();
-		// setPreferredSize(
-
 		// BufferedImage myPicture = ImageIO.read(new File("temp/planarPic.jpg"));
 		JLabel picLabel = new JLabel();//new JLabel(new ImageIcon(myPicture));
 		picLabel.setIcon( new ImageIcon(ImageIO.read( new File("../resources/temp/planarPic.jpg") ) ) );
@@ -299,7 +293,6 @@ public class KnotGUI extends JFrame implements ActionListener {
 	{
 		JTextField a = new JTextField(30);
 		a.setText("-1, 2, -3, 1, -2, 3");
-		// add(a, BorderLayout.NORTH);
 		return a;
 	}
 

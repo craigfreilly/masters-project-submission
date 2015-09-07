@@ -119,25 +119,22 @@ public class DuallyPairedTest
 			colour[i] = -1;
 		}
 
+		// set up the conflicts graph
 		for (int i = 1; i < size + 1 ; i++)
 		{	
-			// System.out.print("i = " + i + " ... ");
 			first = -1;
 			second = -1;
+
+			// find the positions fo the first and second arrays
 			for (int j = 0; j < size*2; j++)
 			{
 				if (star[j] == i && first == -1)
 				{
-					// System.out.println("got in if");
 					first = j;
-					// System.out.println("first = " + first);
 				}
 				else if (star[j] == i && first != -1) //star[j] = i after we've set first
 				{
-					// System.out.println("got in else");
 					second = j;
-					// System.out.println("second = " + second);
-
 				}
 			}
 			
@@ -146,6 +143,7 @@ public class DuallyPairedTest
 				int start = first + 1;
 				int appearancesBetweenLetter[] = new int[size];
 
+				// count the number of times each letter appears between first and second
 				for (int j = start; j < second; j++)
 				{
 					appearancesBetweenLetter[star[j] -1]++;
@@ -163,7 +161,7 @@ public class DuallyPairedTest
 			}
 		}
 
-		// print the graph
+		//  uncomment to print the graph
 			// for (int i = 0; i < size; i++)
 			// {
 			// 	for (int j = 0; j < size; j++)
@@ -180,15 +178,9 @@ public class DuallyPairedTest
 
 		queue.add(0);
 
-		// for (int i = 0; i < size ; i++)
-		// {
-		// 	System.out.print(" " + colour[i]);
-		// }
-
-		// System.out.println();
-
-
 		int index = 0;
+
+		//while the queue isn't empty and all nodes haven't been visited
 		while (queue.peek() != null || !notVisited.isEmpty())
 		{
 			//take things from notVisited if the queue becomes empty before all nodes have been visited
@@ -199,18 +191,18 @@ public class DuallyPairedTest
 			Integer u = queue.removeFirst();
 
 			notVisited.remove(u);
-		// 	// System.out.println("u = " + u);
 
 
 			for (int j = 0; j < size; j++)
 			{
+				// if u is in conflict with j and j is uncoloured
 				if (graph[u][j] == 1 && colour[j] == -1)
 				{
-					// System.out.println("got in big if");
-					// System.out.println("colour u = " + colour[u]);
+					// give j the opposite colour to u
 					if (colour[u] == 0)
 					{
 						colour[j] = 1;
+						queue.add(j);
 					}
 					else if (colour[u] == 1)
 					{
@@ -220,82 +212,16 @@ public class DuallyPairedTest
 					else //we get in here if the opening choice isn't connected
 					{
 						colour[j] = 0;
-						// System.out.println("Something has gone terribly wrong");
 					}
-				}
+				} // if u and j have the same colour
 				else if (graph[u][j] == 1 && colour[j] == colour[u])
 				{
-					// System.out.println(" j = " + j + " colour " + colour[j]);
 					return false;
 				}
 			}
 		}
 
-		// isBipartite(graph,0, size);
-			
-		// if we got through all that then things are cooooooel
 		return true;
+
 	}
-
-// 	public boolean isBipartite(int adjacencyMatrix[][], int source, int size)
-//     {
-
-//     	Queue<Integer> queue = new LinkedList<Integer>();
-// ;
-//     	int numberOfVertices = size -1;
-	    
-// 		int NO_COLOR = 0;
-// 	    int RED = 1;
-// 	    int BLUE = 2;
-
-//         int[] colored = new int[numberOfVertices +  1];
-//         for (int vertex = 1; vertex <= numberOfVertices; vertex++)
-//         {
-//             colored[vertex] = NO_COLOR;
-//         }
-//         colored[source] = RED;
-//         queue.add(source);
- 
-//         int element, neighbour;
-//         while (!queue.isEmpty())
-//         {
-//             element = queue.remove();
-//             neighbour = 1;
-//             while (neighbour <= numberOfVertices)
-//             { 
-//                 if (adjacencyMatrix[element][neighbour] == 1 && colored[element]== colored[neighbour])
-//                 {
-//                     return false;
-//                 }
-//                 if (adjacencyMatrix[element][neighbour] == 1 && colored[neighbour]== NO_COLOR)
-//                 {
-//                     colored[neighbour] = (colored[element] == RED ) ? BLUE :RED;
-//                     queue.add(neighbour);
-//                 }
-//                 neighbour++;
-//             }
-//         }
-//         return true;
-//     }
 }
-
-
-
-
-	// public static void main(String[] args) 
-	// {
-	// 	// james' test case that is paired
-	// 	// int[] thing = new int[] {1, 1, 2, 2, 3, 4, 5, 3, 4, 6, 6, 5};
-	// 	//something that isn't paired
-	// 	// int[] thing = new int[] {1, 3, 4, 2, 1, 5, 2, 3, 5, 4};
-	// 	int[] thing = new int[] {1, 2, 3, 1, 4, 3, 2, 4};
-	// 	int[] wStar = gcStar(thing);
-	// 	if (isDuallyPaired(wStar))
-	// 	{
-	// 		System.out.println("dually paired");
-	// 	}
-	// 	else
-	// 	{
-	// 		System.out.println("not dualy paired");
-	// 	}
-	// }

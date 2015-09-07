@@ -123,22 +123,11 @@ public class NaiveShadowGaussGenerator
 
         if (option == RANDOM || option == RANDOM_PRIME)
         {
-            // System.out.println("Setting random seed");
-            // solver.setVarIntSelector(new RandomIntVarSelector(solver));
             solver.setValIntSelector(new RandomIntValSelector());
-            // Random r = new Random();
-            // long number = r.nextLong();
-
-            // RandomIntValSelector rando = new RandomIntValSelector(number);
-
-            // solver.setIntValSelector(rando);
-            // solver.set(rando);
-
         }
-        else
-        {
-            solver.setVarIntSelector(new StaticVarOrder(solver, solver.getVar(letter)));
-        }
+
+        solver.setVarIntSelector(new StaticVarOrder(solver, solver.getVar(letter)));
+
 
         // set up a set into which we'll add the lexicographically minimum Gauss codes
         codes = new TreeSet<List<Integer>>(new Comparator<List<Integer>>() 
@@ -164,13 +153,11 @@ public class NaiveShadowGaussGenerator
 
         // actually solve stuff!
 
-        // System.out.println("Just before if");
         // if a first solution exists (it does)
         if (solver.solve().booleanValue())
         {
             do
             {
-                // System.out.println("Grabbing another solution");
                 // Generate Gauss codes
                 int[] gaussCode = new int[2*numOfCrossings];
 
@@ -219,25 +206,13 @@ public class NaiveShadowGaussGenerator
             output = output + codeToString(c) + "\n";
         }
 
-        // command line printing code
-        // System.out.println();
-        // System.out.println("De-duplicated codes:");
-        // for (List<Integer> c : codes) 
-        // {
-        //     print(c);
-        // }
-        // System.out.println();
 
         if (verbose) 
         {   
             output = output + "feasible: " + solver.isFeasible() + "\n";
-            // System.out.println("feasible: " + solver.isFeasible());
             output = output + "nbSol: " + solver.getNbSolutions() + "\n";
-            // System.out.println("nbSol: " + solver.getNbSolutions());
             output = output + "nodes: "+ solver.getNodeCount() +"   cpu: "+ solver.getTimeCount() + "\n";
-            // System.out.println("nodes: "+ solver.getNodeCount() +"   cpu: "+ solver.getTimeCount());
             output = output + "Solution count: " + numberOfSolutions() + "\n";
-            // System.out.println("Solution count: " + codes.size());
         }
     }
 
@@ -264,7 +239,6 @@ public class NaiveShadowGaussGenerator
         {
             for (int j = i; j < gaussCode.length; j++)
             {
-                // System.out.println("i = " + i + " j = " + j);
                 int gap = j - i;
                 // otherwise everything is false
                 if (!(gap == gaussCode.length) && (gap % 2 == 0) && (gap > 0))
@@ -280,7 +254,6 @@ public class NaiveShadowGaussGenerator
 
                     if (tempSet.size() == (temp.length / 2))
                     {
-                        // System.out.println("I'm returning false now");
                         return false;
                     }
                 }

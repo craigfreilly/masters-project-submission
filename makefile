@@ -22,10 +22,11 @@ CLASSES = \
 	src/knot/Colourist.java \
 	src/knot/KnotColouring.java \
 	src/gui/MathematicaAdapter.java \
-	src/gui/KnotGUI.java
-	# src/gaussCodeGenerator/DuallyPairTest.java \
-	# src/gaussCodeGenerator/PrimeOutputTest.java \
-	# src/gaussCodeGenerator/TestRunner.java \
+	src/gui/KnotGUI.java \
+	src/test/DuallyPairTest.java \
+	src/test/PrimeOutputTest.java \
+	src/test/ColouringTest.java \
+	src/test/TestRunner.java 
 
 
 default: classes
@@ -36,12 +37,14 @@ clean:
 	$(RM) src/gui/*.class
 	$(RM) src/gaussCodeGenerator/*.class
 	$(RM) src/knot/*.class
+	$(RM) src/test/*.class
+# 	$(RM) src/test/tests.txt
 
-	$(RM) src/test/tests.txt
+# src/test/tests.txt:
+# 	$(RM) src/test/tests.txt
+# 	cd src/
+# 	$(JVM) $(CP) test.TestRunner > src/test/tests.txt
+# 	cd ..
+# 	cat src/test/tests.txt
 
-tests.txt:
-	$(RM) tests.txt
-	$(JVM) $(CP) TestRunner > tests.txt	
-	cat tests.txt
-
-test: tests.txt
+# test: src/test/tests.txt

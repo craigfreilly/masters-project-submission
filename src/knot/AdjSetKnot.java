@@ -36,8 +36,6 @@ public class AdjSetKnot implements Knot
 		//construct a Knot, initially empty
 		firstCrossing = null;
 
-		// TODO maybe set size to minus 1, since the trivial knot will have size 0
-		// but all knots uwith size 1 or 2 are trivial
 		size = 0;
 	}
 
@@ -80,7 +78,6 @@ public class AdjSetKnot implements Knot
 
     	if (size == -1)
     	{
-    		System.out.println("Looks like this is your fist crossing");
     		size = 1;
     	}
     	else
@@ -108,7 +105,6 @@ public class AdjSetKnot implements Knot
 
         if (size == -1)
         {
-            System.out.println("Looks like this is your fist crossing");
             size = 1;
         }
         else
@@ -129,8 +125,6 @@ public class AdjSetKnot implements Knot
     */
     public Knot.Arc addArc(Knot.Crossing source, Knot.Crossing target, int sourceOrient, int targetOrient)
     {
-    	//add outgoing arc to the array label on source
-
         AdjSetKnot.Crossing s = (AdjSetKnot.Crossing) source;
         AdjSetKnot.Crossing t = (AdjSetKnot.Crossing) target;
     	s.addArc(t, sourceOrient, targetOrient);
@@ -474,18 +468,11 @@ public class AdjSetKnot implements Knot
 
         public boolean hasNext()
         {
-            // boolean success = (currentCrossing != null);
-
-            // System.out.println(" " + success + " currentCrossing " + currentCrossing.getOrderAdded());
             return (currentCrossing != null);
         }
 
         public Knot.Crossing next()
         {
-            // int n = currentCrossing.getOrderAdded();
-
-            // System.out.println("" + n);
-
             Knot.Crossing result = currentCrossing;
 
             if (result == null)
@@ -506,6 +493,7 @@ public class AdjSetKnot implements Knot
 
     ///////////////////////// Custom exeptions /////////////////////////
 
+    // thrown if the a knot is walked over before it is closed
     private class KnotNotClosedException extends Exception
     {
     	public KnotNotClosedException(String message)

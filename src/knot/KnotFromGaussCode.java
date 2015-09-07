@@ -24,6 +24,7 @@ public class KnotFromGaussCode
 		int num = 0;
 		int size;
 
+        // split the string up and get the numbers contained in it
 		for (String s: guassString.split("[, ]+"))
 		{
 			try
@@ -32,6 +33,7 @@ public class KnotFromGaussCode
             }
             catch(NumberFormatException e) 
             {
+                // do nothing
             }
 
 			gaussList.addLast(num);
@@ -40,11 +42,7 @@ public class KnotFromGaussCode
  		knot = new AdjSetKnot();
 		size = gaussList.size();
 
- 		for (int i = 0; i < size; i++)
- 		{
- 			int n = gaussList.get(i);
-		}
-
+        // add half as many crossings to the knot as the Gauss code is long
  		for (int i = 0; i < (size / 2); i++)
  		{
 			knot.addCrossing("" + i);
@@ -66,6 +64,7 @@ public class KnotFromGaussCode
  			Knot.Crossing source = knot.getByOrderAdded(Math.abs(n));
  			Knot.Crossing target = knot.getByOrderAdded(Math.abs(m));
 
+            //add the arcs to the knot with repect to their source and target orientations
  			knot.addArc(source, target, orient(n), orient(m));
  		}
 

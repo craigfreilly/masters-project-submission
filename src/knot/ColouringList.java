@@ -29,14 +29,6 @@ public class ColouringList
 		size = knot.size();
 		this.list = new Node[size];
 
-		// for(int i = 0; i < size; i++)
-		// {
-		// 	if (list[i] == null)
-		// 	{
-		// 		// System.out.println("The " + i + " in this list is null");
-		// 	}
-		// }
-
 		//add all the crossings from the knot to the list
 		addCrossings();
 	}
